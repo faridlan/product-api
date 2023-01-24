@@ -10,6 +10,7 @@ func ToProductResponse(product domain.Product) web.ProductResponse {
 		Id:        product.Id,
 		Name:      product.Name,
 		Price:     product.Price,
+		Quantity:  product.Quantity,
 		CreatedAt: product.CreatedAt,
 		UpdatedAt: product.UpdatedAt,
 	}

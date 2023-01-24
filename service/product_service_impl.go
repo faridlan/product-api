@@ -54,9 +54,10 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 	product.Name = request.Name
 	product.Price = request.Price
 	product.Quantity = request.Quantity
-	product.UpdatedAt = epochTimeNow
+	product.UpdatedAt.Int64 = epochTimeNow
 
 	product = service.ProductRepo.Update(ctx, tx, product)
+
 	return helper.ToProductResponse(product)
 }
 
