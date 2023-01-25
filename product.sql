@@ -57,3 +57,5 @@ VALUES (
     );
 
 UPDATE product SET updated_at = 1674576973 WHERE id = 3 ;
+
+SELECT * from product;

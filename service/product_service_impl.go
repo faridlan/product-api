@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/faridlan/product-api/helper"
+	"github.com/faridlan/product-api/helper/mysql"
 	"github.com/faridlan/product-api/model/domain"
 	"github.com/faridlan/product-api/model/web"
 	"github.com/faridlan/product-api/repository"
@@ -50,11 +51,13 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 
 	epochTimeNow := time.Now().Unix()
 
+	NewInt := mysql.NewNullInt64(epochTimeNow)
+
 	product.Id = request.Id
 	product.Name = request.Name
 	product.Price = request.Price
 	product.Quantity = request.Quantity
-	product.UpdatedAt.Int64 = epochTimeNow
+	product.UpdatedAt = NewInt
 
 	product = service.ProductRepo.Update(ctx, tx, product)
 
@@ -69,7 +72,7 @@ func (service *ProductServiceImpl) Delete(ctx context.Context, productId int) {
 	product, err := service.ProductRepo.FindById(ctx, tx, productId)
 	helper.PanicIfErr(err)
 
-	service.ProductRepo.Update(ctx, tx, product)
+	service.ProductRepo.Delete(ctx, tx, product)
 }
 
 func (service *ProductServiceImpl) FindById(ctx context.Context, productId int) web.ProductResponse {

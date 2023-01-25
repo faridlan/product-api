@@ -38,7 +38,7 @@ func (repository *ProductRepositoryImpl) Update(ctx context.Context, tx *sql.Tx,
 }
 
 func (repository *ProductRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, product domain.Product) {
-	SQL := "DELETE product WHERE id = ?"
+	SQL := "DELETE FROM product WHERE id = ?"
 	_, err := tx.ExecContext(ctx, SQL, product.Id)
 	helper.PanicIfErr(err)
 }
