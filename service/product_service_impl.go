@@ -49,7 +49,7 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 	product, err := service.ProductRepo.FindById(ctx, tx, request.Id)
 	helper.PanicIfErr(err)
 
-	epochTimeNow := time.Now().Unix()
+	epochTimeNow := time.Now().UnixMilli()
 
 	NewInt := mysql.NewNullInt64(epochTimeNow)
 
