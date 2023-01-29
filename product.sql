@@ -59,3 +59,15 @@ VALUES (
 UPDATE product SET updated_at = 1674576973 WHERE id = 3 ;
 
 SELECT * from product;
+
+SELECT * from product;
+
+UPDATE product
+SET
+    name = "Laptop Lenovo core i3",
+    price = 900000,
+    quantity = 15,
+    updated_at = 1675009935427
+WHERE id = 1;
+
+UPDATE product SET name = "Laptop Lenovo inte core i3" WHERE id = 1;
