@@ -2,6 +2,8 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/faridlan/product-api/helper"
@@ -9,7 +11,9 @@ import (
 
 func NewDatabase() *sql.DB {
 
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3307)/nostra")
+	port := os.Getenv("PORT")
+
+	db, err := sql.Open("mysql", fmt.Sprintf("root:root@tcp(localhost:%s)/nostra", port))
 	helper.PanicIfErr(err)
 
 	db.SetConnMaxIdleTime(time.Minute * 10)
