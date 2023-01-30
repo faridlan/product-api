@@ -8,6 +8,7 @@ import (
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/repository"
 	"github.com/faridlan/product-api/service"
+	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/julienschmidt/httprouter"
 )
@@ -15,10 +16,11 @@ import (
 func main() {
 
 	router := httprouter.New()
+	validate := validator.New()
 	db := app.NewDatabase()
 
 	ProductRepository := repository.NewProductRepository()
-	ProductService := service.NewProductService(ProductRepository, db)
+	ProductService := service.NewProductService(ProductRepository, db, validate)
 	ProductController := controller.NewProductController(ProductService)
 
 	router.POST("/api/products/", ProductController.Create)
