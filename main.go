@@ -5,6 +5,7 @@ import (
 
 	"github.com/faridlan/product-api/app"
 	"github.com/faridlan/product-api/controller"
+	"github.com/faridlan/product-api/exception"
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/repository"
 	"github.com/faridlan/product-api/service"
@@ -28,6 +29,8 @@ func main() {
 	router.DELETE("/api/products/:id", ProductController.Delete)
 	router.GET("/api/products/:id", ProductController.FindById)
 	router.GET("/api/products/", ProductController.FindAll)
+
+	router.PanicHandler = exception.ExceptionError
 
 	server := http.Server{
 		Addr:    "localhost:8080",

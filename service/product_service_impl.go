@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/faridlan/product-api/exception"
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/helper/mysql"
 	"github.com/faridlan/product-api/model/domain"
@@ -69,7 +70,9 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepo.FindById(ctx, tx, request.Id)
-	helper.PanicIfErr(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	epochTimeNow := time.Now().UnixMilli()
 
@@ -92,7 +95,9 @@ func (service *ProductServiceImpl) Delete(ctx context.Context, productId int) {
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepo.FindById(ctx, tx, productId)
-	helper.PanicIfErr(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.ProductRepo.Delete(ctx, tx, product)
 }
@@ -103,7 +108,9 @@ func (service *ProductServiceImpl) FindById(ctx context.Context, productId int) 
 	defer helper.CommitOrRollback(tx)
 
 	product, err := service.ProductRepo.FindById(ctx, tx, productId)
-	helper.PanicIfErr(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToProductResponse(product)
 
