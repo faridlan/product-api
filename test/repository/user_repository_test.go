@@ -177,6 +177,31 @@ func TestSave(t *testing.T) {
 	assert.Equal(t, productResult, productExpec)
 }
 
+func TestSaveFailed(t *testing.T) {
+	db, mock, err := sqlMock()
+	helper.PanicIfErr(err)
+
+	defer db.Close()
+
+	product := domain.Product{
+		Name:      "Laptop Lenovo",
+		Price:     7000000,
+		Quantity:  10,
+		CreatedAt: time.Now().UnixMilli(),
+	}
+
+	mock.ExpectBegin()
+	tx := getTx(db)
+	mock.ExpectExec("INSERT INTO product(name, price, quantity, created_at) values (?,?,?,?)").WithArgs(product.Name, product.Price, product.Quantity, product.CreatedAt).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectCommit()
+
+	productExpec := domain.Product{}
+
+	productResult := productRepo.Save(context.Background(), tx, productExpec)
+
+	assert.Empty(t, productResult)
+}
+
 func TestUpdate(t *testing.T) {
 	db, mock, err := sqlMock()
 	helper.PanicIfErr(err)
