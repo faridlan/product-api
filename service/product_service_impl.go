@@ -30,13 +30,11 @@ func NewProductService(productRepo repository.ProductRepository, DB *sql.DB, val
 }
 
 func (service *ProductServiceImpl) Create(ctx context.Context, request web.ProductCreate) web.ProductResponse {
-	trans := helper.TranslateValidationEnglish(service.Validate)
 	err := service.Validate.Struct(request)
-	errs := helper.TranslateError(err, trans)
+	errs := helper.TranslateError(err, service.Validate)
 
-	for _, err := range errs {
-		fmt.Println(err)
-		return web.ProductResponse{}
+	if err != nil {
+		panic(exception.NewValidationError(errs))
 	}
 
 	tx, err := service.DB.Begin()
@@ -56,9 +54,12 @@ func (service *ProductServiceImpl) Create(ctx context.Context, request web.Produ
 }
 
 func (service *ProductServiceImpl) Update(ctx context.Context, request web.ProductUpdate) web.ProductResponse {
-	trans := helper.TranslateValidationEnglish(service.Validate)
 	err := service.Validate.Struct(request)
-	errs := helper.TranslateError(err, trans)
+	errs := helper.TranslateError(err, service.Validate)
+
+	if err != nil {
+		panic(exception.NewValidationError(errs))
+	}
 
 	for _, err := range errs {
 		fmt.Println(err)
@@ -71,7 +72,7 @@ func (service *ProductServiceImpl) Update(ctx context.Context, request web.Produ
 
 	product, err := service.ProductRepo.FindById(ctx, tx, request.Id)
 	if err != nil {
-		panic(exception.NewNotFoundError(err.Error()))
+		panic(exception.NewInterfaceError(err.Error()))
 	}
 
 	epochTimeNow := time.Now().UnixMilli()
@@ -96,7 +97,7 @@ func (service *ProductServiceImpl) Delete(ctx context.Context, productId int) {
 
 	product, err := service.ProductRepo.FindById(ctx, tx, productId)
 	if err != nil {
-		panic(exception.NewNotFoundError(err.Error()))
+		panic(exception.NewInterfaceError(err.Error()))
 	}
 
 	service.ProductRepo.Delete(ctx, tx, product)
@@ -109,7 +110,7 @@ func (service *ProductServiceImpl) FindById(ctx context.Context, productId int) 
 
 	product, err := service.ProductRepo.FindById(ctx, tx, productId)
 	if err != nil {
-		panic(exception.NewNotFoundError(err.Error()))
+		panic(exception.NewInterfaceError(err.Error()))
 	}
 
 	return helper.ToProductResponse(product)

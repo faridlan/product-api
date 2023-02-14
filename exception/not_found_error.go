@@ -1,11 +1,11 @@
 package exception
 
-type NotFoundError struct {
+type InterfaceError struct {
 	Error string
 }
 
-func NewNotFoundError(err string) NotFoundError {
-	return NotFoundError{
+func NewInterfaceError(err string) InterfaceError {
+	return InterfaceError{
 		Error: err,
 	}
 }

@@ -1,4 +1,10 @@
--- Active: 1674574060255@@127.0.0.1@3306@nostra
+-- Active: 1661154899678@@127.0.0.1@3306
+
+SHOW DATABASEs;
+
+CREATE DATABASE nostra;
+
+USE nostra;
 
 CREATE Table
     product (
@@ -71,3 +77,5 @@ SET
 WHERE id = 1;
 
 UPDATE product SET name = "Laptop Lenovo inte core i3" WHERE id = 1;
+
+SELECT * FROM product;

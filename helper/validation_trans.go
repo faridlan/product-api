@@ -1,8 +1,6 @@
 package helper
 
 import (
-	"fmt"
-
 	english "github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -20,18 +18,20 @@ func TranslateValidationEnglish(validate *validator.Validate) ut.Translator {
 
 }
 
-func TranslateError(err error, ut ut.Translator) (erss []error) {
+func TranslateError(err error, validate *validator.Validate) (errs []string) {
 
 	if err == nil {
 		return nil
 	}
 
+	ut := TranslateValidationEnglish(validate)
+
 	validationErrs := err.(validator.ValidationErrors)
 	for _, fieldError := range validationErrs {
-		translatedError := fmt.Errorf(fieldError.Translate(ut))
-		erss = append(erss, translatedError)
+		translatedError := fieldError.Translate(ut)
+		errs = append(errs, translatedError)
 	}
 
-	return erss
+	return errs
 
 }
