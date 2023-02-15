@@ -11,7 +11,7 @@ import (
 
 func NewDatabase() *sql.DB {
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORT_DB")
 
 	db, err := sql.Open("mysql", fmt.Sprintf("root:root@tcp(localhost:%s)/nostra", port))
 	helper.PanicIfErr(err)
