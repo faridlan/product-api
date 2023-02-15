@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"fmt"
+	"log"
+	"net"
 	"net/http"
 	"strconv"
 
@@ -81,6 +84,28 @@ func (controller *ProductControllerImpl) FindById(writer http.ResponseWriter, re
 	}
 
 	helper.WriteToResponseBody(writer, webResponse)
+	ip, port, err := net.SplitHostPort(request.RemoteAddr)
+	if err != nil {
+		//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+
+		fmt.Fprintf(writer, "userip: %q is not IP:port", request.RemoteAddr)
+	}
+
+	userIP := net.ParseIP(ip)
+	if userIP == nil {
+		//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+		fmt.Fprintf(writer, "userip: %q is not IP:port", request.RemoteAddr)
+		return
+	}
+
+	// This will only be defined when site is accessed via non-anonymous proxy
+	// and takes precedence over RemoteAddr
+	// Header.Get is case-insensitive
+	forward := request.Header.Get("X-Forwarded-For")
+
+	log.Println("IP : ", ip)
+	log.Println("PORT : ", port)
+	log.Println("Forward : ", forward)
 }
 
 func (controller *ProductControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
