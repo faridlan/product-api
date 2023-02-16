@@ -12,8 +12,9 @@ import (
 func NewDatabase() *sql.DB {
 
 	port := os.Getenv("PORT_DB")
+	host := os.Getenv("HOST_DB")
 
-	db, err := sql.Open("mysql", fmt.Sprintf("root:root@tcp(localhost:%s)/nostra", port))
+	db, err := sql.Open("mysql", fmt.Sprintf("root:root@tcp(%s:%s)/nostra", host, port))
 	helper.PanicIfErr(err)
 
 	db.SetConnMaxIdleTime(time.Minute * 10)
