@@ -12,4 +12,6 @@ type ProductController interface {
 	Delete(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	FindById(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
+	Seeder(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
+	SeederDelete(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 }

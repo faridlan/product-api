@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/model/domain"
@@ -78,5 +79,37 @@ func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx
 		products = append(products, product)
 	}
 
+	log.Println("Repository", products)
+
 	return products
+}
+
+func (repository *ProductRepositoryImpl) SaveMany(ctx context.Context, tx *sql.Tx, products []domain.Product) []domain.Product {
+	SQL := "INSERT INTO product(name, price, quantity, created_at) values (?,?,?,?)"
+
+	stmt, err := tx.PrepareContext(ctx, SQL)
+	helper.PanicIfErr(err)
+
+	defer stmt.Close()
+
+	for _, product := range products {
+		result, err := stmt.ExecContext(ctx, product.Name, product.Price, product.Quantity, product.CreatedAt)
+		helper.PanicIfErr(err)
+
+		id, err := result.LastInsertId()
+		helper.PanicIfErr(err)
+
+		product.Id = int(id)
+	}
+
+	log.Println("repository", products)
+
+	return products
+}
+
+func (repository *ProductRepositoryImpl) DeleteAll(ctx context.Context, tx *sql.Tx) {
+	SQL := "TRUNCATE product"
+
+	_, err := tx.ExecContext(ctx, SQL)
+	helper.PanicIfErr(err)
 }

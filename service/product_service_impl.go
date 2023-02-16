@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/faridlan/product-api/exception"
@@ -125,4 +126,37 @@ func (service *ProductServiceImpl) FindAll(ctx context.Context) []web.ProductRes
 	products := service.ProductRepo.FindAll(ctx, tx)
 
 	return helper.ToProductResponses(products)
+}
+
+func (service *ProductServiceImpl) CreateMany(ctx context.Context, request []web.ProductCreate) []web.ProductResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfErr(err)
+	defer helper.CommitOrRollback(tx)
+
+	products := []domain.Product{}
+
+	for _, req := range request {
+		product := domain.Product{}
+
+		product.Name = req.Name
+		product.Price = req.Price
+		product.Quantity = req.Quantity
+		product.CreatedAt = time.Now().UnixMilli()
+
+		products = append(products, product)
+	}
+
+	service.ProductRepo.SaveMany(ctx, tx, products)
+
+	log.Println("Service", request)
+
+	return helper.ToProductResponses(products)
+}
+
+func (service *ProductServiceImpl) DeleteAll(ctx context.Context) {
+	tx, err := service.DB.Begin()
+	helper.PanicIfErr(err)
+	defer helper.CommitOrRollback(tx)
+
+	service.ProductRepo.DeleteAll(ctx, tx)
 }

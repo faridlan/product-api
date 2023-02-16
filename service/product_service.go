@@ -12,4 +12,6 @@ type ProductService interface {
 	Delete(ctx context.Context, productId int)
 	FindById(ctx context.Context, productId int) web.ProductResponse
 	FindAll(ctx context.Context) []web.ProductResponse
+	CreateMany(ctx context.Context, request []web.ProductCreate) []web.ProductResponse
+	DeleteAll(ctx context.Context)
 }

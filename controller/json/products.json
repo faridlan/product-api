@@ -1,0 +1,17 @@
+[
+  {
+  "name" : "Cooler",
+  "price" : 180000,
+  "quantity": 100
+  },
+  {
+  "name" : "Flashdisk 64GB",
+  "price" : 78000,
+  "quantity": 1000
+  },
+  {
+  "name" : "Monitor Asus",
+  "price" : 2000000,
+  "quantity": 150
+  }
+]

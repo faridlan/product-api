@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"embed"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -12,6 +14,10 @@ import (
 	"github.com/faridlan/product-api/service"
 	"github.com/julienschmidt/httprouter"
 )
+
+//go:embed json/products.json
+
+var Json embed.FS
 
 type ProductControllerImpl struct {
 	ProductService service.ProductService
@@ -114,6 +120,38 @@ func (controller *ProductControllerImpl) FindAll(writer http.ResponseWriter, req
 		Code:   http.StatusOK,
 		Status: "OK",
 		Data:   products,
+	}
+
+	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller *ProductControllerImpl) Seeder(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
+
+	products, err := Json.ReadFile("json/products.json")
+	helper.PanicIfErr(err)
+
+	productCreate := []web.ProductCreate{}
+	json.Unmarshal(products, &productCreate)
+
+	product := controller.ProductService.CreateMany(request.Context(), productCreate)
+
+	webResponse := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   product,
+	}
+
+	log.Println("Controller", webResponse.Data)
+
+	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller *ProductControllerImpl) SeederDelete(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
+	controller.ProductService.DeleteAll(request.Context())
+
+	webResponse := web.WebResponse{
+		Code:   http.StatusOK,
+		Status: "OK",
 	}
 
 	helper.WriteToResponseBody(writer, webResponse)

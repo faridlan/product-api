@@ -25,8 +25,10 @@ func main() {
 	ProductController := controller.NewProductController(ProductService)
 
 	router.POST("/api/products/", ProductController.Create)
+	router.POST("/api/seeder/products", ProductController.Seeder)
 	router.PUT("/api/products/:id", ProductController.Update)
 	router.DELETE("/api/products/:id", ProductController.Delete)
+	router.DELETE("/api/seeder/products", ProductController.SeederDelete)
 	router.GET("/api/products/:id", ProductController.FindById)
 	router.GET("/api/products/", ProductController.FindAll)
 
