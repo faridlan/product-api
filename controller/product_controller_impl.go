@@ -3,13 +3,11 @@ package controller
 import (
 	"embed"
 	"encoding/json"
-	"fmt"
-	"log"
-	"net"
 	"net/http"
 	"strconv"
 
 	"github.com/faridlan/product-api/helper"
+	"github.com/faridlan/product-api/helper/logging"
 	"github.com/faridlan/product-api/model/web"
 	"github.com/faridlan/product-api/service"
 	"github.com/julienschmidt/httprouter"
@@ -40,6 +38,7 @@ func (controller *ProductControllerImpl) Create(writer http.ResponseWriter, requ
 		Data:   product,
 	}
 
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -60,6 +59,7 @@ func (controller *ProductControllerImpl) Update(writer http.ResponseWriter, requ
 		Data:   product,
 	}
 
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -74,6 +74,7 @@ func (controller *ProductControllerImpl) Delete(writer http.ResponseWriter, requ
 		Status: "OK",
 	}
 
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -89,29 +90,8 @@ func (controller *ProductControllerImpl) FindById(writer http.ResponseWriter, re
 		Data:   product,
 	}
 
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
-	ip, port, err := net.SplitHostPort(request.RemoteAddr)
-	if err != nil {
-		//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
-
-		fmt.Fprintf(writer, "userip: %q is not IP:port", request.RemoteAddr)
-	}
-
-	userIP := net.ParseIP(ip)
-	if userIP == nil {
-		//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
-		fmt.Fprintf(writer, "userip: %q is not IP:port", request.RemoteAddr)
-		return
-	}
-
-	// This will only be defined when site is accessed via non-anonymous proxy
-	// and takes precedence over RemoteAddr
-	// Header.Get is case-insensitive
-	forward := request.Header.Get("X-Forwarded-For")
-
-	log.Println("IP : ", ip)
-	log.Println("PORT : ", port)
-	log.Println("Forward : ", forward)
 }
 
 func (controller *ProductControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
@@ -122,6 +102,7 @@ func (controller *ProductControllerImpl) FindAll(writer http.ResponseWriter, req
 		Data:   products,
 	}
 
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -141,8 +122,7 @@ func (controller *ProductControllerImpl) Seeder(writer http.ResponseWriter, requ
 		Data:   product,
 	}
 
-	log.Println("Controller", webResponse.Data)
-
+	logging.ProductLogger(webResponse, writer, request)
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -153,6 +133,8 @@ func (controller *ProductControllerImpl) SeederDelete(writer http.ResponseWriter
 		Code:   http.StatusOK,
 		Status: "OK",
 	}
+
+	logging.ProductLogger(webResponse, writer, request)
 
 	helper.WriteToResponseBody(writer, webResponse)
 }

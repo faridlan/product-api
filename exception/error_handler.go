@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/faridlan/product-api/helper"
+	"github.com/faridlan/product-api/helper/logging"
 	"github.com/faridlan/product-api/model/web"
 )
 
@@ -32,6 +33,7 @@ func internalServerError(writer http.ResponseWriter, request *http.Request, err 
 		Data:   err,
 	}
 
+	logging.ProductLoggerError(webResponse, writer, request, err)
 	helper.WriteToResponseBody(writer, webResponse)
 
 }
@@ -50,6 +52,7 @@ func notFoundError(writer http.ResponseWriter, request *http.Request, err any) b
 			Data:   exception.Error,
 		}
 
+		logging.ProductLoggerError(webResponse, writer, request, exception.Error)
 		helper.WriteToResponseBody(writer, webResponse)
 
 		return true
@@ -60,20 +63,10 @@ func notFoundError(writer http.ResponseWriter, request *http.Request, err any) b
 
 func validationError(writer http.ResponseWriter, request *http.Request, err any) bool {
 	exception, ok := err.(ValidationError)
-	// helper.TranslateError(err, helper.TranslateValidationEnglish())
 
 	if ok {
 		writer.Header().Add("content-type", "application/json")
 		writer.WriteHeader(http.StatusBadRequest)
-		// english := english.New()
-		// uni := ut.New(english, english)
-		// trans, _ := uni.GetTranslator("en")
-
-		// var errs []string
-		// for _, err := range exception {
-		// 	translatedError := err.Translate(trans)
-		// 	errs = append(errs, translatedError)
-		// }
 
 		webResponse := web.WebResponse{
 			Code:   http.StatusBadRequest,
@@ -81,6 +74,7 @@ func validationError(writer http.ResponseWriter, request *http.Request, err any)
 			Data:   exception.Error,
 		}
 
+		logging.ProductLoggerError(webResponse, writer, request, exception.Error)
 		helper.WriteToResponseBody(writer, webResponse)
 
 		return true
