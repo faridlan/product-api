@@ -31,6 +31,7 @@ func main() {
 	router.DELETE("/api/seeder/products", ProductController.SeederDelete)
 	router.GET("/api/products/:id", ProductController.FindById)
 	router.GET("/api/products/", ProductController.FindAll)
+	router.GET("/api/log", ProductController.Logger)
 
 	router.PanicHandler = exception.ExceptionError
 

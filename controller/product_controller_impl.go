@@ -135,6 +135,12 @@ func (controller *ProductControllerImpl) SeederDelete(writer http.ResponseWriter
 	}
 
 	logging.ProductLogger(webResponse, writer, request)
-
 	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller *ProductControllerImpl) Logger(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
+
+	writer.Header().Add("Content-Disposition", "attachment; filename=\"log.txt\"")
+	http.ServeFile(writer, request, "helper/logging/logger.log")
+
 }
