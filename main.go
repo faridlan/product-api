@@ -7,6 +7,7 @@ import (
 	"github.com/faridlan/product-api/controller"
 	"github.com/faridlan/product-api/exception"
 	"github.com/faridlan/product-api/helper"
+	"github.com/faridlan/product-api/middleware"
 	"github.com/faridlan/product-api/repository"
 	"github.com/faridlan/product-api/service"
 	"github.com/go-playground/validator/v10"
@@ -37,7 +38,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: router,
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
