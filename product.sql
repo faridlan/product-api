@@ -79,3 +79,14 @@ WHERE id = 1;
 UPDATE product SET name = "Laptop Lenovo inte core i3" WHERE id = 1;
 
 SELECT * FROM product;
+
+CREATE Table
+    user (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(150) NOT NULL,
+        password VARCHAR(200) NOT NULL
+    ) engine = InnoDB;
+
+INSERT INTO user(username, password) VALUES ("adnim", "SecretAdmin");
+
+SELECT * FROM user;
