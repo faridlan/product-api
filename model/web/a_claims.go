@@ -13,5 +13,6 @@ var ExpiredTime = time.Now().Add(time.Minute * 5)
 type Claims struct {
 	Id       int    `json:"id,omitempty"`
 	Username string `json:"username,omitempty"`
+	Token    string `json:"token,omitempty"`
 	*jwt.RegisteredClaims
 }

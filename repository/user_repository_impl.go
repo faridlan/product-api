@@ -18,7 +18,7 @@ func NewUserRepository() UserRepository {
 
 func (repository *UserRepositoryImpl) Login(ctx context.Context, tx *sql.Tx, user domain.User) (domain.User, error) {
 
-	SQL := "SELECT id, username WHERE username = ? and password = ?"
+	SQL := "SELECT id, username FROM user WHERE username = ? and password = ?"
 
 	rows, err := tx.QueryContext(ctx, SQL, user.Username, user.Password)
 	helper.PanicIfErr(err)

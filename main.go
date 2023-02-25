@@ -25,14 +25,21 @@ func main() {
 	ProductService := service.NewProductService(ProductRepository, db, validate)
 	ProductController := controller.NewProductController(ProductService)
 
-	router.POST("/api/products/", ProductController.Create)
+	router.POST("/api/products", ProductController.Create)
 	router.POST("/api/seeder/products", ProductController.Seeder)
 	router.PUT("/api/products/:id", ProductController.Update)
 	router.DELETE("/api/products/:id", ProductController.Delete)
 	router.DELETE("/api/seeder/products", ProductController.SeederDelete)
 	router.GET("/api/products/:id", ProductController.FindById)
-	router.GET("/api/products/", ProductController.FindAll)
+	router.GET("/api/products", ProductController.FindAll)
 	router.GET("/api/log", ProductController.Logger)
+
+	UserRepository := repository.NewUserRepository()
+
+	UserService := service.NewAuthService(UserRepository, db)
+	UserController := controller.NewUserControllerImpl(UserService)
+
+	router.POST("/api/login", UserController.Login)
 
 	router.PanicHandler = exception.ExceptionError
 

@@ -24,3 +24,14 @@ func ToProductResponses(products []domain.Product) []web.ProductResponse {
 
 	return productResponse
 }
+
+func ToLoginResponse(user domain.User) web.LoginResponse {
+
+	return web.LoginResponse{
+		User: &web.UserResponse{
+			Id:       user.Id,
+			Username: user.Username,
+		},
+	}
+
+}

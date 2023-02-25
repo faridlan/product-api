@@ -1,12 +1,14 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/helper/logging"
 	"github.com/faridlan/product-api/model/web"
+	"github.com/golang-jwt/jwt"
 )
 
 type AuthMiddleware struct {
@@ -23,10 +25,16 @@ func (authMiddleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, requ
 
 	authorizationHeader := request.Header.Get("Authorization")
 
-	// Endpoints := exception.EndpointsAdmin()
+	// enpoints := exception.EndpointsGlobal()
 
-	// for _, Enpoint := range Endpoints {
-	if request.URL.Path == "/api/products" {
+	// for _, Enpoint := range enpoints {
+	// 	if request.URL.Path == Enpoint.Url && request.Method == Enpoint.Method {
+	// 		authMiddleware.Handler.ServeHTTP(writer, request)
+	// 		return
+	// 	}
+	// }
+
+	if request.URL.Path == "/api/products/:id" && request.Method == "GET" {
 		authMiddleware.Handler.ServeHTTP(writer, request)
 		return
 	}
@@ -46,36 +54,51 @@ func (authMiddleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, requ
 		return
 	}
 
-	// tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
+	tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
 
 	// user := domain.User{
 	// 	Username: "Admin",
 	// 	Password: "admin",
 	// }
 
-	// var claim = &web.Claims{}
+	var claim = &web.Claims{}
 
-	// token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
-	// 	if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-	// 		return nil, fmt.Errorf("signing method invalid")
-	// 	} else if method != web.JwtSigningMEethod {
-	// 		return nil, fmt.Errorf("signing method invalid")
-	// 	}
-	// 	return web.JwtSecret, nil
-	// })
+	token, err := jwt.ParseWithClaims(tokenString, claim, func(token *jwt.Token) (interface{}, error) {
+		if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("signing method invalid")
+		} else if method != jwt.SigningMethodHS256 {
+			return nil, fmt.Errorf("signing method invalid")
+		}
+		return web.JwtSecret, nil
+	})
 
-	// if err != nil {
-	// 	writer.Header().Add("Content-Type", "application.json")
-	// 	writer.WriteHeader(http.StatusUnauthorized)
+	if err != nil {
+		writer.Header().Add("Content-Type", "application.json")
+		writer.WriteHeader(http.StatusUnauthorized)
 
-	// 	webResponse := web.WebResponse{
-	// 		Code:   http.StatusUnauthorized,
-	// 		Status: "UNAUTHORIZED",
-	// 	}
+		webResponse := web.WebResponse{
+			Code:   http.StatusUnauthorized,
+			Status: "UNAUTHORIZED",
+		}
 
-	// 	logging.ProductLogger(webResponse, writer, request)
-	// 	helper.WriteToResponseBody(writer, webResponse)
-	// 	return
-	// }
+		logging.ProductLogger(webResponse, writer, request)
+		helper.WriteToResponseBody(writer, webResponse)
+		return
+	}
+
+	if !token.Valid {
+		writer.Header().Add("Content-Type", "application/json")
+		writer.WriteHeader(http.StatusBadRequest)
+		webResponse := web.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "BAD REQUEST",
+		}
+
+		helper.WriteToResponseBody(writer, webResponse)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	authMiddleware.Handler.ServeHTTP(writer, request)
 
 }
