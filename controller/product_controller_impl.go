@@ -46,7 +46,7 @@ func (controller *ProductControllerImpl) Update(writer http.ResponseWriter, requ
 	productUpdate := web.ProductUpdate{}
 	helper.ReadFromRequestBody(request, &productUpdate)
 
-	idProduct := param.ByName("id")
+	idProduct := param.ByName("productId")
 	id, err := strconv.Atoi(idProduct)
 	helper.PanicIfErr(err)
 
@@ -64,7 +64,7 @@ func (controller *ProductControllerImpl) Update(writer http.ResponseWriter, requ
 }
 
 func (controller *ProductControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
-	idProduct := param.ByName("id")
+	idProduct := param.ByName("productId")
 	id, err := strconv.Atoi(idProduct)
 	helper.PanicIfErr(err)
 
@@ -79,7 +79,7 @@ func (controller *ProductControllerImpl) Delete(writer http.ResponseWriter, requ
 }
 
 func (controller *ProductControllerImpl) FindById(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
-	idProduct := param.ByName("id")
+	idProduct := param.ByName("productId")
 	id, err := strconv.Atoi(idProduct)
 	helper.PanicIfErr(err)
 

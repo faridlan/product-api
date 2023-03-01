@@ -87,6 +87,8 @@ CREATE Table
         password VARCHAR(200) NOT NULL
     ) engine = InnoDB;
 
-INSERT INTO user(username, password) VALUES ("adnim", "SecretAdmin");
+INSERT INTO user(username, password) VALUES ("admin", "SecretAdmin");
 
 SELECT * FROM user;
+
+SELECT id, username W 

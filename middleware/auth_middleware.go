@@ -28,13 +28,13 @@ func (authMiddleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, requ
 	// enpoints := exception.EndpointsGlobal()
 
 	// for _, Enpoint := range enpoints {
-	// 	if request.URL.Path == Enpoint.Url && request.Method == Enpoint.Method {
+	// 	if request.URL.Path != Enpoint.Url && request.Method != Enpoint.Method {
 	// 		authMiddleware.Handler.ServeHTTP(writer, request)
 	// 		return
 	// 	}
 	// }
 
-	if request.URL.Path == "/api/products/:id" && request.Method == "GET" {
+	if request.URL.Path != "/api/seeder/products" && request.URL.Path != "/api/log" {
 		authMiddleware.Handler.ServeHTTP(writer, request)
 		return
 	}
@@ -55,11 +55,6 @@ func (authMiddleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, requ
 	}
 
 	tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
-
-	// user := domain.User{
-	// 	Username: "Admin",
-	// 	Password: "admin",
-	// }
 
 	var claim = &web.Claims{}
 

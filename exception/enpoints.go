@@ -5,15 +5,15 @@ import "github.com/faridlan/product-api/model/web"
 func EndpointsGlobal() []web.Enpoint {
 	return []web.Enpoint{
 		{
-			Url:    "/api/login",
+			Url:    "/api/seeder/products",
 			Method: "POST",
 		},
 		{
-			Url:    "/api/products",
-			Method: "GET",
+			Url:    "/api/seeder/products",
+			Method: "DELETE",
 		},
 		{
-			Url:    "/api/products/:id",
+			Url:    "/api/log",
 			Method: "GET",
 		},
 	}
