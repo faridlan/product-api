@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/model/web"
 	"github.com/sirupsen/logrus"
 )
@@ -14,16 +13,19 @@ import (
 func ProductLogger(webRespone web.WebResponse, writer http.ResponseWriter, request *http.Request) {
 
 	logger := logrus.New()
-	logger.SetFormatter(&logrus.TextFormatter{})
+	logger.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
 
 	logger.SetOutput(os.Stdout)
 
-	file, err := os.OpenFile("helper/logging/logger.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	helper.PanicIfErr(err)
+	// file, err := os.OpenFile(loggerString, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	// helper.PanicIfErr(err)
 
-	defer file.Close()
+	// defer file.Close()
 
-	logger.SetOutput(file)
+	// logger.SetOutput(file)
 
 	ip, _, err := net.SplitHostPort(request.RemoteAddr)
 	if err != nil {
@@ -49,16 +51,19 @@ func ProductLogger(webRespone web.WebResponse, writer http.ResponseWriter, reque
 func ProductLoggerError(webRespone web.WebResponse, writer http.ResponseWriter, request *http.Request, errMessage any) {
 
 	logger := logrus.New()
-	logger.SetFormatter(&logrus.TextFormatter{})
+	logger.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
 
 	logger.SetOutput(os.Stdout)
 
-	file, err := os.OpenFile("helper/logging/logger.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	helper.PanicIfErr(err)
+	// file, err := os.OpenFile("helper/logging/logger.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	// helper.PanicIfErr(err)
 
-	defer file.Close()
+	// defer file.Close()
 
-	logger.SetOutput(file)
+	// logger.SetOutput(file)
 
 	ip, _, err := net.SplitHostPort(request.RemoteAddr)
 	if err != nil {

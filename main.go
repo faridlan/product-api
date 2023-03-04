@@ -32,7 +32,7 @@ func main() {
 	router.DELETE("/api/seeder/products", ProductController.SeederDelete)
 	router.GET("/api/products/:productId", ProductController.FindById)
 	router.GET("/api/products", ProductController.FindAll)
-	router.GET("/api/log", ProductController.Logger)
+	// router.GET("/api/log", ProductController.Logger)
 
 	UserRepository := repository.NewUserRepository()
 
@@ -44,7 +44,7 @@ func main() {
 	router.PanicHandler = exception.ExceptionError
 
 	server := http.Server{
-		Addr:    "localhost:8080",
+		Addr:    ":9000",
 		Handler: middleware.NewAuthMiddleware(router),
 		// Handler: router,
 	}

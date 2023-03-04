@@ -14,5 +14,5 @@ type ProductController interface {
 	FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	Seeder(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	SeederDelete(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
-	Logger(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
+	// Logger(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 }

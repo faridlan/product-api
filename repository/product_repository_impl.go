@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
 
 	"github.com/faridlan/product-api/helper"
 	"github.com/faridlan/product-api/model/domain"
@@ -79,8 +78,6 @@ func (repository *ProductRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx
 		products = append(products, product)
 	}
 
-	log.Println("Repository", products)
-
 	return products
 }
 
@@ -101,8 +98,6 @@ func (repository *ProductRepositoryImpl) SaveMany(ctx context.Context, tx *sql.T
 
 		product.Id = int(id)
 	}
-
-	log.Println("repository", products)
 
 	return products
 }
